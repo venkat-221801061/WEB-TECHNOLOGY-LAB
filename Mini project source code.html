@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Review System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #e2e8f0;
+      --text: #334155;
+      --text-light: #64748b;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    body {
+      background-color: #f8fafc;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    header {
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .search-bar {
+      flex: 1;
+      margin: 0 2rem;
+      position: relative;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--secondary);
+      font-size: 0.875rem;
+      background-color: #f1f5f9;
+      transition: all 0.2s ease;
+    }
+    
+    .search-bar input:focus {
+      outline: none;
+      background-color: white;
+      border-color: var(--primary);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+    
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    
+    .main {
+      padding: 2rem 0;
+    }
+    
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--secondary);
+      padding-bottom: 0.75rem;
+    }
+    
+    .section-title h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .stat-card .label {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+    
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .book-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .book-cover {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+      background-color: #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .book-cover .default-cover {
+      font-size: 4rem;
+      color: var(--primary);
+    }
+    
+    .book-info {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .book-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    
+    .book-author {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    
+    .book-rating {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .star {
+      color: var(--warning);
+    }
+    
+    .book-review {
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      flex: 1;
+    }
+    
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    
+    .card-actions button {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .card-actions button:hover {
+      background-color: var(--secondary);
+    }
+    
+    .read-more {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    
+    .book-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .tag {
+      background-color: #e0e7ff;
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background-color: white;
+      border-radius: 0.5rem;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: color 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      color: var(--text);
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--secondary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .star-rating {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .star-rating i {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #d1d5db;
+      transition: color 0.2s ease;
+    }
+    
+    .star-rating i.active {
+      color: var(--warning);
+    }
+    
+    .form-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 0;
+      color: var(--text-light);
+    }
+    
+    .no-results i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .filter-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .filter-select {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--secondary);
+      background-color: white;
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+      gap: 0.5rem;
+    }
+    
+    .pagination button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--secondary);
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .pagination button:hover:not(.active) {
+      background-color: var(--secondary);
+    }
+    
+    .pagination button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      max-width: 350px;
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast-icon {
+      font-size: 1.5rem;
+    }
+    
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+    
+    .toast-error .toast-icon {
+      color: var(--danger);
+    }
+    
+    .toast-warning .toast-icon {
+      color: var(--warning);
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .toast-message {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+    
+    .toast-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 1.25rem;
+      transition: color 0.2s ease;
+    }
+    
+    .toast-close:hover {
+      color: var(--text);
+    }
+    
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .loading.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(99, 102, 241, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .modal-detail {
+      padding: 0;
+    }
+    
+    .book-detail {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .book-detail-header {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--secondary);
+    }
+    
+    .book-detail-cover {
+      width: 120px;
+      height: 180px;
+      flex-shrink: 0;
+      background-color: #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+    
+    .book-detail-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .book-detail-cover .default-cover {
+      font-size: 3rem;
+      color: var(--primary);
+    }
+    
+    .book-detail-info {
+      flex: 1;
+    }
+    
+    .book-detail-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .book-detail-author {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    
+    .book-detail-rating {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .book-detail-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-light);
+    }
+    
+    .book-detail-content {
+      padding: 1.5rem;
+    }
+    
+    .book-detail-section {
+      margin-bottom: 2rem;
+    }
+    
+    .book-detail-section h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--secondary);
+    }
+    
+    .confirm-dialog {
+      text-align: center;
+      padding: 1rem;
+    }
+    
+    .confirm-dialog p {
+      margin-bottom: 2rem;
+    }
+    
+    .confirm-dialog-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .search-bar {
+        margin: 1rem 0;
+        width: 100%;
+      }
+      
+      .book-detail-header {
+        flex-direction: column;
+      }
+      
+      .book-detail-cover {
+        width: 100%;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <i class="fas fa-book"></i>
+          <span>BookReviews</span>
+        </div>
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="search-input" placeholder="Search books by title, author, or genre...">
+        </div>
+        <div class="nav-actions">
+          <button class="btn btn-primary" id="add-book-btn">
+            <i class="fas fa-plus"></i>
+            Add Review
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <div class="section-title">
+        <h2>Book Review Dashboard</h2>
+      </div>
+
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="number" id="total-books">0</div>
+          <div class="label">Total Books</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="average-rating">0.0</div>
+          <div class="label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="recent-reviews">0</div>
+          <div class="label">Reviews This Month</div>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <h2>Your Book Collection</h2>
+        <div class="filters">
+          <div class="filter-group">
+            <label class="filter-label" for="sort-select">Sort by:</label>
+            <select id="sort-select" class="filter-select">
+              <option value="date-desc">Date Added (Newest)</option>
+              <option value="date-asc">Date Added (Oldest)</option>
+              <option value="rating-desc">Rating (Highest)</option>
+              <option value="rating-asc">Rating (Lowest)</option>
+              <option value="title-asc">Title (A-Z)</option>
+              <option value="title-desc">Title (Z-A)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="filter-select">Filter by:</label>
+            <select id="filter-select" class="filter-select">
+              <option value="all">All Books</option>
+              <option value="rating-5">5 Star Books</option>
+              <option value="rating-4">4+ Star Books</option>
+              <option value="recently-added">Recently Added</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="book-list" id="book-list">
+        <!-- Books will be added here dynamically -->
+      </div>
+
+      <div class="pagination" id="pagination">
+        <!-- Pagination will be added here dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="add-book-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Book Review</h3>
+        <button class="modal-close" id="add-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-book-form">
+          <div class="form-group">
+            <label class="form-label" for="book-title">Book Title *</label>
+            <input type="text" id="book-title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="book-author">Author *</label>
+            <input type="text" id="book-author" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="book-cover">Cover Image URL (Optional)</label>
+            <input type="url" id="book-cover" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="book-genre">Genre</label>
+            <input type="text" id="book-genre" class="form-control" placeholder="Fiction, Mystery, Romance, etc.">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rating *</label>
+            <div class="star-rating" id="add-rating">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="book-review">Your Review *</label>
+            <textarea id="book-review" class="form-control" required placeholder="Share your thoughts about this book..."></textarea>
+          </div>
+          <div class="form-footer">
+            <button type="button" class="btn btn-outline" id="cancel-add">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-book-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Book Review</h3>
+        <button class="modal-close" id="edit-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-book-form">
+          <input type="hidden" id="edit-book-id">
+          <div class="form-group">
+            <label class="form-label" for="edit-book-title">Book Title *</label>
+            <input type="text" id="edit-book-title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-book-author">Author *</label>
+            <input type="text" id="edit-book-author" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-book-cover">Cover Image URL (Optional)</label>
+            <input type="url" id="edit-book-cover" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-book-genre">Genre</label>
+            <input type="text" id="edit-book-genre" class="form-control" placeholder="Fiction, Mystery, Romance, etc.">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rating *</label>
+            <div class="star-rating" id="edit-rating">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-book-review">Your Review *</label>
+            <textarea id="edit-book-review" class="form-control" required placeholder="Share your thoughts about this book..."></textarea>
+          </div>
+          <div class="form-footer">
+            <button type="button" class="btn btn-outline" id="cancel-edit">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update Review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="view-book-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Book Details</h3>
+        <button class="modal-close" id="view-modal-close">&times;</button>
+      </div>
+      <div class="modal-body modal-detail">
+        <div class="book-detail" id="book-detail">
+          <!-- Book details will be added here dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirm-delete-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirm Deletion</h3>
+        <button class="modal-close" id="confirm-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-dialog">
+          <p>Are you sure you want to delete this book review? This action cannot be undone.</p>
+          <input type="hidden" id="delete-book-id">
+          <div class="confirm-dialog-actions">
+            <button class="btn btn-outline" id="cancel-delete">Cancel</button>
+            <button class="btn btn-danger" id="confirm-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="toast-content">
+      <div class="toast-title" id="toast-title">Success!</div>
+      <div class="toast-message" id="toast-message">Action completed successfully.</div>
+    </div>
+    <button class="toast-close" id="toast-close">&times;</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    // Book review data store
+    const BookReviewApp = {
+      books: [],
+      currentBookId: 1,
+      currentRating: 0,
+      editRating: 0,
+      itemsPerPage: 6,
+      currentPage: 1,
+      searchTerm: '',
+      sortOption: 'date-desc',
+      filterOption: 'all',
+      
+      init() {
+        // Load saved books from localStorage if available
+        this.loadBooks();
+        
+        // Initialize UI
+        this.updateStats();
+        this.renderBooks();
+        
+        // Add event listeners
+        this.addEventListeners();
+      },
+      
+      loadBooks() {
+        const savedBooks = localStorage.getItem('bookReviews');
+        if (savedBooks) {
+          this.books = JSON.parse(savedBooks);
+          // Find the highest ID to ensure new books get unique IDs
+          if (this.books.length > 0) {
+            const maxId = Math.max(...this.books.map(book => book.id));
+            this.currentBookId = maxId + 1;
+          }
+        } else {
+          // Add sample data if no books exist
+          this.addSampleBooks();
+        }
+      },
+      
+      addSampleBooks() {
+        const sampleBooks = [
+          {
+            id: 1,
+            title: "To Kill a Mockingbird",
+            author: "Harper Lee",
+            cover: "",
+            genre: "Classic, Fiction",
+            rating: 5,
+            review: "A powerful exploration of racial injustice and moral growth in the American South. Scout Finch's narrative provides both innocence and profound insight into the complexities of human nature and social inequality.",
+            date: "2025-03-15T14:22:00Z"
+          },
+          {
+            id: 2,
+            title: "1984",
+            author: "George Orwell",
+            cover: "",
+            genre: "Dystopian, Science Fiction",
+            rating: 4,
+            review: "A chilling portrayal of totalitarianism and surveillance that remains relevant decades after its publication. Orwell's vision of a society dominated by Big Brother is both terrifying and thought-provoking.",
+            date: "2025-04-02T09:15:00Z"
+          },
+          {
+            id: 3,
+            title: "The Great Gatsby",
+            author: "F. Scott Fitzgerald",
+            cover: "",
+            genre: "Classic, Fiction",
+            rating: 4,
+            review: "A beautifully written examination of the American Dream's corruption in the Jazz Age. Gatsby's obsession with Daisy and the decadence of the era are captured with lyrical prose and symbolic depth.",
+            date: "2025-04-20T16:45:00Z"
+          }
+        ];
+        
+        this.books = sampleBooks;
+        this.currentBookId = 4;
+        this.saveBooks();
+      },
+      
+      saveBooks() {
+        localStorage.setItem('bookReviews', JSON.stringify(this.books));
+      },
+      
+      updateStats() {
+        // Update total books
+        document.getElementById('total-books').textContent = this.books.length;
+        
+        // Calculate and update average rating
+        if (this.books.length > 0) {
+          const totalRatings = this.books.reduce((sum, book) => sum + book.rating, 0);
+          const averageRating = (totalRatings / this.books.length).toFixed(1);
+          document.getElementById('average-rating').textContent = averageRating;
+        } else {
+          document.getElementById('average-rating').textContent = '0.0';
+        }
+        
+        // Calculate recent reviews (this month)
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const recentBooks = this.books.filter(book => {
+          const bookDate = new Date(book.date);
+          return bookDate >= firstDayOfMonth;
+        });
+        document.getElementById('recent-reviews').textContent = recentBooks.length;
+      },
+      
+      getFilteredBooks() {
+        let filteredBooks = [...this.books];
+        
+        // Apply search filter
+        if (this.searchTerm) {
+          const searchLower = this.searchTerm.toLowerCase();
+          filteredBooks = filteredBooks.filter(book => 
+            book.title.toLowerCase().includes(searchLower) || 
+            book.author.toLowerCase().includes(searchLower) || 
+            (book.genre && book.genre.toLowerCase().includes(searchLower))
+          );
+        }
+        
+        // Apply category filter
+        switch (this.filterOption) {
+          case 'rating-5':
+            filteredBooks = filteredBooks.filter(book => book.rating === 5);
+            break;
+          case 'rating-4':
+            filteredBooks = filteredBooks.filter(book => book.rating >= 4);
+            break;
+          case 'recently-added':
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            filteredBooks = filteredBooks.filter(book => new Date(book.date) >= thirtyDaysAgo);
+            break;
+        }
+        
+        // Apply sorting
+        switch (this.sortOption) {
+          case 'date-desc':
+            filteredBooks.sort((a, b) => new Date(b.date) - new Date(a.date));
+            break;
+          case 'date-asc':
+            filteredBooks.sort((a, b) => new Date(a.date) - new Date(b.date));
+            break;
+          case 'rating-desc':
+            filteredBooks.sort((a, b) => b.rating - a.rating);
+            break;
+          case 'rating-asc':
+            filteredBooks.sort((a, b) => a.rating - b.rating);
+            break;
+          case 'title-asc':
+            filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+            break;
+          case 'title-desc':
+            filteredBooks.sort((a, b) => b.title.localeCompare(a.title));
+            break;
+        }
+        
+        return filteredBooks;
+      },
+      
+      renderBooks() {
+        const bookList = document.getElementById('book-list');
+        bookList.innerHTML = '';
+        
+        const filteredBooks = this.getFilteredBooks();
+        
+        // Pagination
+        const totalPages = Math.ceil(filteredBooks.length / this.itemsPerPage);
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const booksToDisplay = filteredBooks.slice(startIndex, endIndex);
+        
+        if (booksToDisplay.length === 0) {
+          const noResults = document.createElement('div');
+          noResults.className = 'no-results';
+          noResults.innerHTML = `
+            <i class="fas fa-book-open"></i>
+            <h3>No books found</h3>
+            <p>Try adjusting your search or add a new book review!</p>
+          `;
+          bookList.appendChild(noResults);
+        } else {
+          booksToDisplay.forEach(book => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card';
+            bookCard.innerHTML = `
+              <div class="book-cover">
+                ${book.cover ? `<img src="${book.cover}" alt="${book.title} cover">` : `<div class="default-cover"><i class="fas fa-book"></i></div>`}
+              </div>
+              <div class="book-info">
+                <h3 class="book-title">${book.title}</h3>
+                <p class="book-author">by ${book.author}</p>
+                <div class="book-rating">
+                  ${this.getStarRatingHTML(book.rating)}
+                </div>
+                ${book.genre ? `
+                <div class="book-tags">
+                  ${book.genre.split(',').map(genre => `<span class="tag">${genre.trim()}</span>`).join('')}
+                </div>
+                ` : ''}
+                <p class="book-review">${book.review}</p>
+                <a href="#" class="read-more" data-id="${book.id}">Read full review</a>
+                <div class="card-actions">
+                  <button class="edit-book" data-id="${book.id}"><i class="fas fa-edit"></i></button>
+                  <button class="delete-book" data-id="${book.id}"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            `;
+            bookList.appendChild(bookCard);
+          });
+        }
+        
+        // Update pagination
+        this.renderPagination(totalPages);
+      },
+      
+      renderPagination(totalPages) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+        
+        if (totalPages <= 1) {
+          return;
+        }
+        
+        // Previous button
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevButton.disabled = this.currentPage === 1;
+        prevButton.addEventListener('click', () => {
+          if (this.currentPage > 1) {
+            this.currentPage--;
+            this.renderBooks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+        pagination.appendChild(prevButton);
+        
+        // Page buttons
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage + 1 < maxVisiblePages) {
+          startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          if (i === this.currentPage) {
+            pageButton.classList.add('active');
+          }
+          pageButton.addEventListener('click', () => {
+            this.currentPage = i;
+            this.renderBooks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+          pagination.appendChild(pageButton);
+        }
+        
+        // Next button
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextButton.disabled = this.currentPage === totalPages;
+        nextButton.addEventListener('click', () => {
+          if (this.currentPage < totalPages) {
+            this.currentPage++;
+            this.renderBooks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+        pagination.appendChild(nextButton);
+      },
+      
+      getStarRatingHTML(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= rating) {
+            stars += '<i class="fas fa-star star"></i>';
+          } else {
+            stars += '<i class="far fa-star star"></i>';
+          }
+        }
+        return stars;
+      },
+      
+      addBook(bookData) {
+        const newBook = {
+          id: this.currentBookId++,
+          title: bookData.title,
+          author: bookData.author,
+          cover: bookData.cover || '',
+          genre: bookData.genre || '',
+          rating: bookData.rating,
+          review: bookData.review,
+          date: new Date().toISOString()
+        };
+        
+        this.books.unshift(newBook);
+        this.saveBooks();
+        this.updateStats();
+        this.renderBooks();
+        
+        return newBook;
+      },
+      
+      updateBook(bookData) {
+        const index = this.books.findIndex(book => book.id === bookData.id);
+        if (index !== -1) {
+          this.books[index] = {
+            ...this.books[index],
+            title: bookData.title,
+            author: bookData.author,
+            cover: bookData.cover || '',
+            genre: bookData.genre || '',
+            rating: bookData.rating,
+            review: bookData.review
+          };
+          
+          this.saveBooks();
+          this.updateStats();
+          this.renderBooks();
+          
+          return this.books[index];
+        }
+        return null;
+      },
+      
+      deleteBook(id) {
+        const index = this.books.findIndex(book => book.id === id);
+        if (index !== -1) {
+          const deletedBook = this.books[index];
+          this.books.splice(index, 1);
+          this.saveBooks();
+          this.updateStats();
+          this.renderBooks();
+          return deletedBook;
+        }
+        return null;
+      },
+      
+      getBookById(id) {
+        return this.books.find(book => book.id === id) || null;
+      },
+      
+      showAddModal() {
+        document.getElementById('add-book-modal').classList.add('active');
+        document.getElementById('book-title').focus();
+        // Reset form
+        document.getElementById('add-book-form').reset();
+        this.currentRating = 0;
+        this.updateRatingUI('add-rating', 0);
+      },
+      
+      hideAddModal() {
+        document.getElementById('add-book-modal').classList.remove('active');
+      },
+      
+      showEditModal(id) {
+        const book = this.getBookById(id);
+        if (book) {
+          document.getElementById('edit-book-id').value = book.id;
+          document.getElementById('edit-book-title').value = book.title;
+          document.getElementById('edit-book-author').value = book.author;
+          document.getElementById('edit-book-cover').value = book.cover || '';
+          document.getElementById('edit-book-genre').value = book.genre || '';
+          document.getElementById('edit-book-review').value = book.review;
+          
+          this.editRating = book.rating;
+          this.updateRatingUI('edit-rating', book.rating);
+          
+          document.getElementById('edit-book-modal').classList.add('active');
+          document.getElementById('edit-book-title').focus();
+        }
+      },
+      
+      hideEditModal() {
+        document.getElementById('edit-book-modal').classList.remove('active');
+      },
+      
+      showViewModal(id) {
+        const book = this.getBookById(id);
+        if (book) {
+          const bookDetail = document.getElementById('book-detail');
+          const date = new Date(book.date);
+          const formattedDate = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+          
+          bookDetail.innerHTML = `
+            <div class="book-detail-header">
+              <div class="book-detail-cover">
+                ${book.cover ? `<img src="${book.cover}" alt="${book.title} cover">` : `<div class="default-cover"><i class="fas fa-book"></i></div>`}
+              </div>
+              <div class="book-detail-info">
+                <h2 class="book-detail-title">${book.title}</h2>
+                <p class="book-detail-author">by ${book.author}</p>
+                <div class="book-detail-rating">
+                  ${this.getStarRatingHTML(book.rating)}
+                </div>
+                ${book.genre ? `
+                <div class="book-tags">
+                  ${book.genre.split(',').map(genre => `<span class="tag">${genre.trim()}</span>`).join('')}
+                </div>
+                ` : ''}
+                <div class="book-detail-meta">
+                  <div class="meta-item">
+                    <i class="far fa-calendar"></i>
+                    <span>Added on ${formattedDate}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="book-detail-content">
+              <div class="book-detail-section">
+                <h3>Review</h3>
+                <p>${book.review}</p>
+              </div>
+              <div class="form-footer">
+                <button class="btn btn-outline edit-from-detail" data-id="${book.id}">
+                  <i class="fas fa-edit"></i> Edit Review
+                </button>
+              </div>
+            </div>
+          `;
+          
+          document.getElementById('view-book-modal').classList.add('active');
+        }
+      },
+      
+      hideViewModal() {
+        document.getElementById('view-book-modal').classList.remove('active');
+      },
+      
+      showDeleteModal(id) {
+        document.getElementById('delete-book-id').value = id;
+        document.getElementById('confirm-delete-modal').classList.add('active');
+      },
+      
+      hideDeleteModal() {
+        document.getElementById('confirm-delete-modal').classList.remove('active');
+      },
+      
+      updateRatingUI(containerId, rating) {
+        const stars = document.querySelectorAll(`#${containerId} i`);
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.className = 'fas fa-star active';
+          } else {
+            star.className = 'far fa-star';
+          }
+        });
+      },
+      
+      showToast(type, title, message) {
+        const toast = document.getElementById('toast');
+        const toastTitle = document.getElementById('toast-title');
+        const toastMessage = document.getElementById('toast-message');
+        const toastIcon = toast.querySelector('.toast-icon i');
+        
+        toast.className = `toast toast-${type}`;
+        
+        switch (type) {
+          case 'success':
+            toastIcon.className = 'fas fa-check-circle';
+            break;
+          case 'error':
+            toastIcon.className = 'fas fa-exclamation-circle';
+            break;
+          case 'warning':
+            toastIcon.className = 'fas fa-exclamation-triangle';
+            break;
+        }
+        
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+        
+        toast.classList.add('active');
+        
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+          toast.classList.remove('active');
+        }, 3000);
+      },
+      
+      showLoading() {
+        document.getElementById('loading').classList.add('active');
+      },
+      
+      hideLoading() {
+        document.getElementById('loading').classList.remove('active');
+      },
+      
+      addEventListeners() {
+        // Add Book Button
+        document.getElementById('add-book-btn').addEventListener('click', () => {
+          this.showAddModal();
+        });
+        
+        // Add Book Form Submit
+        document.getElementById('add-book-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          if (this.currentRating === 0) {
+            this.showToast('error', 'Error', 'Please select a rating for the book.');
+            return;
+          }
+          
+          const bookData = {
+            title: document.getElementById('book-title').value.trim(),
+            author: document.getElementById('book-author').value.trim(),
+            cover: document.getElementById('book-cover').value.trim(),
+            genre: document.getElementById('book-genre').value.trim(),
+            rating: this.currentRating,
+            review: document.getElementById('book-review').value.trim()
+          };
+          
+          this.showLoading();
+          
+          // Simulate network delay
+          setTimeout(() => {
+            this.addBook(bookData);
+            this.hideAddModal();
+            this.hideLoading();
+            this.showToast('success', 'Success', 'Book review added successfully!');
+          }, 600);
+        });
+        
+        // Edit Book Form Submit
+        document.getElementById('edit-book-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          if (this.editRating === 0) {
+            this.showToast('error', 'Error', 'Please select a rating for the book.');
+            return;
+          }
+          
+          const bookData = {
+            id: parseInt(document.getElementById('edit-book-id').value),
+            title: document.getElementById('edit-book-title').value.trim(),
+            author: document.getElementById('edit-book-author').value.trim(),
+            cover: document.getElementById('edit-book-cover').value.trim(),
+            genre: document.getElementById('edit-book-genre').value.trim(),
+            rating: this.editRating,
+            review: document.getElementById('edit-book-review').value.trim()
+          };
+          
+          this.showLoading();
+          
+          // Simulate network delay
+          setTimeout(() => {
+            this.updateBook(bookData);
+            this.hideEditModal();
+            this.hideLoading();
+            this.showToast('success', 'Success', 'Book review updated successfully!');
+          }, 600);
+        });
+        
+        // Add Rating Stars
+        document.getElementById('add-rating').addEventListener('click', (e) => {
+          if (e.target.tagName === 'I') {
+            this.currentRating = parseInt(e.target.dataset.rating);
+            this.updateRatingUI('add-rating', this.currentRating);
+          }
+        });
+        
+        // Edit Rating Stars
+        document.getElementById('edit-rating').addEventListener('click', (e) => {
+          if (e.target.tagName === 'I') {
+            this.editRating = parseInt(e.target.dataset.rating);
+            this.updateRatingUI('edit-rating', this.editRating);
+          }
+        });
+        
+        // Close modals
+        document.getElementById('add-modal-close').addEventListener('click', () => {
+          this.hideAddModal();
+        });
+        
+        document.getElementById('edit-modal-close').addEventListener('click', () => {
+          this.hideEditModal();
+        });
+        
+        document.getElementById('view-modal-close').addEventListener('click', () => {
+          this.hideViewModal();
+        });
+        
+        document.getElementById('confirm-modal-close').addEventListener('click', () => {
+          this.hideDeleteModal();
+        });
+        
+        // Cancel buttons
+        document.getElementById('cancel-add').addEventListener('click', () => {
+          this.hideAddModal();
+        });
+        
+        document.getElementById('cancel-edit').addEventListener('click', () => {
+          this.hideEditModal();
+        });
+        
+        document.getElementById('cancel-delete').addEventListener('click', () => {
+          this.hideDeleteModal();
+        });
+        
+        // Confirm delete
+        document.getElementById('confirm-delete').addEventListener('click', () => {
+          const bookId = parseInt(document.getElementById('delete-book-id').value);
+          
+          this.showLoading();
+          
+          // Simulate network delay
+          setTimeout(() => {
+            this.deleteBook(bookId);
+            this.hideDeleteModal();
+            this.hideLoading();
+            this.showToast('success', 'Success', 'Book review deleted successfully!');
+          }, 600);
+        });
+        
+        // Toast close button
+        document.getElementById('toast-close').addEventListener('click', () => {
+          document.getElementById('toast').classList.remove('active');
+        });
+        
+        // Search input
+        document.getElementById('search-input').addEventListener('input', (e) => {
+          this.searchTerm = e.target.value.trim();
+          this.currentPage = 1;
+          this.renderBooks();
+        });
+        
+        // Sort select
+        document.getElementById('sort-select').addEventListener('change', (e) => {
+          this.sortOption = e.target.value;
+          this.currentPage = 1;
+          this.renderBooks();
+        });
+        
+        // Filter select
+        document.getElementById('filter-select').addEventListener('change', (e) => {
+          this.filterOption = e.target.value;
+          this.currentPage = 1;
+          this.renderBooks();
+        });
+        
+        // Book list delegated events
+        document.getElementById('book-list').addEventListener('click', (e) => {
+          // Edit button
+          if (e.target.closest('.edit-book')) {
+            const bookId = parseInt(e.target.closest('.edit-book').dataset.id);
+            this.showEditModal(bookId);
+            e.preventDefault();
+          }
+          
+          // Delete button
+          if (e.target.closest('.delete-book')) {
+            const bookId = parseInt(e.target.closest('.delete-book').dataset.id);
+            this.showDeleteModal(bookId);
+            e.preventDefault();
+          }
+          
+          // Read more link
+          if (e.target.classList.contains('read-more')) {
+            const bookId = parseInt(e.target.dataset.id);
+            this.showViewModal(bookId);
+            e.preventDefault();
+          }
+        });
+        
+        // Edit from detail view
+        document.addEventListener('click', (e) => {
+          if (e.target.closest('.edit-from-detail')) {
+            const bookId = parseInt(e.target.closest('.edit-from-detail').dataset.id);
+            this.hideViewModal();
+            this.showEditModal(bookId);
+            e.preventDefault();
+          }
+        });
+      }
+    };
+    
+    // Initialize the app when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      BookReviewApp.init();
+    });
+  </script>
